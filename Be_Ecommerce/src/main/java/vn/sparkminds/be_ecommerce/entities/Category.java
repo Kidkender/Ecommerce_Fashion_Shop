@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Entity
+@Table(name = "t_category")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,8 +18,9 @@ public class Category {
     private Long id;
 
     @NotNull
-    @Size
+    @Size(max = 50)
     private String name;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_category_id")
     private Category parentCategory;
