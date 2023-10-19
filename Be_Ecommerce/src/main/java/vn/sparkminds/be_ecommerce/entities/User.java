@@ -25,6 +25,7 @@ public class User {
     private String password;
     private String role;
     private String mobile;
+    private String email;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Address> address = new ArrayList<>();
