@@ -15,4 +15,5 @@ public Category findByName(String name);
         " c.parentCategory.name =:parentCategoryName")
 public Category findByNameAndParent(@Param("name") String name,@Param(
         "parentCategoryName") String parentCategoryName);
+
 }

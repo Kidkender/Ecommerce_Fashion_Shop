@@ -2,7 +2,9 @@ package vn.sparkminds.be_ecommerce.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.parameters.P;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.sparkminds.be_ecommerce.entities.Category;
 import vn.sparkminds.be_ecommerce.entities.Product;
@@ -16,6 +18,7 @@ import vn.sparkminds.be_ecommerce.services.dto.request.CreateProductRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -78,20 +81,30 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public String deleteProduct(Long productId) throws ProductException {
-        Product product=findProductById(productId);
+        Product product = findProductById(productId);
         product.getSizes().clear();
         productRepository.delete(product);
         return "Product deleted successfully";
     }
 
     @Override
-    public Product updateProduct(Long productId, Product product) throws ProductException {
-        return null;
+    public Product updateProduct(Long productId, Product req) throws ProductException {
+        Product product = findProductById(productId);
+        if (req.getQuantity() != 0) {
+            product.setQuantity(req.getQuantity());
+        }
+
+        return productRepository.save(product);
     }
 
     @Override
     public Product findProductById(Long productId) throws ProductException {
-        return null;
+        Optional<Product> opt = productRepository.findById(productId);
+        if (opt.isPresent()) {
+            return opt.get();
+        }
+
+        throw new ProductException("Product not found with id " + productId);
     }
 
     @Override
@@ -101,6 +114,30 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<Product> getAllProduct(String category, List<String> color, List<String> sizes, Integer minPrice, Integer maxPrice, Integer minDiscount, String sort, String stock, Integer pageNumber, Integer pageSize) {
-        return null;
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        List<Product> products = productRepository.filterProducts(category,
+                minPrice, maxPrice, minDiscount, sort);
+        if (!color.isEmpty()) {
+            products =
+                    products.stream().filter(p -> color.stream()
+                            .anyMatch(c -> c.equalsIgnoreCase(p.getColor()))).collect(Collectors.toList());
+        }
+        if (stock != null) {
+            if (stock.equals("in_stock")) {
+                products =
+                        products.stream().filter(p -> p.getQuantity() > 0).collect(Collectors.toList());
+            } else if (stock.equals("out_of_stock")) {
+                products = products.stream().filter(p -> p.getQuantity() < 1).collect(Collectors.toList());
+            }
+
+        }
+        int startIndex = (int) pageable.getOffset();
+        int endIndex = Math.min(startIndex + pageable.getPageSize(),
+                products.size());
+        List<Product> pageContent = products.subList(startIndex, endIndex);
+        Page<Product> filterdProduct = new PageImpl<>(pageContent, pageable,
+                products.size());
+        return filterdProduct;
     }
 }
