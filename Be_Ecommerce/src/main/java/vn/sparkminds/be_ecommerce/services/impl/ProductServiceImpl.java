@@ -1,5 +1,9 @@
 package vn.sparkminds.be_ecommerce.services.impl;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -14,11 +18,6 @@ import vn.sparkminds.be_ecommerce.repositories.ProductRepository;
 import vn.sparkminds.be_ecommerce.services.ProductService;
 import vn.sparkminds.be_ecommerce.services.UserService;
 import vn.sparkminds.be_ecommerce.services.dto.request.CreateProductRequest;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -40,8 +39,8 @@ public class ProductServiceImpl implements ProductService {
             topLevel = categoryRepository.save(topLavelCategory);
 
         }
-        Category secondLevel =
-                categoryRepository.findByNameAndParent(req.getSecondLavelCategory(), topLevel.getName());
+        Category secondLevel = categoryRepository.findByNameAndParent(req.getSecondLavelCategory(),
+                topLevel.getName());
         if (secondLevel == null) {
             Category secondLavelCategory = new Category();
             secondLavelCategory.setName(req.getSecondLavelCategory());
@@ -51,8 +50,8 @@ public class ProductServiceImpl implements ProductService {
         }
 
 
-        Category thirdLevel =
-                categoryRepository.findByNameAndParent(req.getThirdLavelCategory(), secondLevel.getName());
+        Category thirdLevel = categoryRepository.findByNameAndParent(req.getThirdLavelCategory(),
+                secondLevel.getName());
         if (thirdLevel == null) {
             Category thirdLavelCategory = new Category();
             thirdLavelCategory.setName(req.getThirdLavelCategory());
@@ -75,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
         product.setCreatedAt(LocalDateTime.now());
 
         Product savedProduct = productRepository.save(product);
-//        System.out.println("Product " + product);
+        // System.out.println("Product " + product);
         return savedProduct;
     }
 
@@ -113,31 +112,32 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<Product> getAllProduct(String category, List<String> color, List<String> sizes, Integer minPrice, Integer maxPrice, Integer minDiscount, String sort, String stock, Integer pageNumber, Integer pageSize) {
+    public Page<Product> getAllProduct(String category, List<String> color, List<String> sizes,
+            Integer minPrice, Integer maxPrice, Integer minDiscount, String sort, String stock,
+            Integer pageNumber, Integer pageSize) {
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        List<Product> products = productRepository.filterProducts(category,
-                minPrice, maxPrice, minDiscount, sort);
+        List<Product> products =
+                productRepository.filterProducts(category, minPrice, maxPrice, minDiscount, sort);
         if (!color.isEmpty()) {
-            products =
-                    products.stream().filter(p -> color.stream()
-                            .anyMatch(c -> c.equalsIgnoreCase(p.getColor()))).collect(Collectors.toList());
+            products = products.stream()
+                    .filter(p -> color.stream().anyMatch(c -> c.equalsIgnoreCase(p.getColor())))
+                    .collect(Collectors.toList());
         }
         if (stock != null) {
             if (stock.equals("in_stock")) {
-                products =
-                        products.stream().filter(p -> p.getQuantity() > 0).collect(Collectors.toList());
+                products = products.stream().filter(p -> p.getQuantity() > 0)
+                        .collect(Collectors.toList());
             } else if (stock.equals("out_of_stock")) {
-                products = products.stream().filter(p -> p.getQuantity() < 1).collect(Collectors.toList());
+                products = products.stream().filter(p -> p.getQuantity() < 1)
+                        .collect(Collectors.toList());
             }
 
         }
         int startIndex = (int) pageable.getOffset();
-        int endIndex = Math.min(startIndex + pageable.getPageSize(),
-                products.size());
+        int endIndex = Math.min(startIndex + pageable.getPageSize(), products.size());
         List<Product> pageContent = products.subList(startIndex, endIndex);
-        Page<Product> filterdProduct = new PageImpl<>(pageContent, pageable,
-                products.size());
+        Page<Product> filterdProduct = new PageImpl<>(pageContent, pageable, products.size());
         return filterdProduct;
     }
 }

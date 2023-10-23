@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.sparkminds.be_ecommerce.config.JwtProvider;
+import vn.sparkminds.be_ecommerce.entities.Cart;
 import vn.sparkminds.be_ecommerce.entities.User;
 import vn.sparkminds.be_ecommerce.exceptions.UserException;
 import vn.sparkminds.be_ecommerce.repositories.UserRepository;
+import vn.sparkminds.be_ecommerce.services.CartService;
 import vn.sparkminds.be_ecommerce.services.dto.request.LoginRequest;
 import vn.sparkminds.be_ecommerce.services.dto.response.AuthResponse;
 import vn.sparkminds.be_ecommerce.services.impl.CustomeUserServiceImpl;
@@ -34,9 +36,12 @@ public class AuthController {
 
     @Autowired
     private CustomeUserServiceImpl customeUserService;
+    @Autowired
+    private CartService cartService;
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthResponse> createUserHandler(@RequestBody User user) throws UserException {
+    public ResponseEntity<AuthResponse> createUserHandler(@RequestBody User user)
+            throws UserException {
         String email = user.getEmail();
         String password = user.getPassword();
         String fistName = user.getFirstName();
@@ -44,8 +49,7 @@ public class AuthController {
         User isEmailExist = userRepository.findByEmail(email);
 
         if (isEmailExist != null) {
-            throw new UserException("Email is already used with another " +
-                    "account");
+            throw new UserException("Email is already used with another " + "account");
         }
         User createdUser = new User();
         createdUser.setEmail(email);
@@ -53,9 +57,9 @@ public class AuthController {
         createdUser.setFirstName(fistName);
         createdUser.setLastName(lastName);
         User savedUser = userRepository.save(createdUser);
+        Cart cart = cartService.createCart(savedUser);
         Authentication auth =
-                new UsernamePasswordAuthenticationToken(savedUser.getEmail(),
-                        user.getPassword());
+                new UsernamePasswordAuthenticationToken(savedUser.getEmail(), user.getPassword());
         SecurityContextHolder.getContext().setAuthentication(auth);
         String token = jwtProvider.generateToken(auth);
         AuthResponse authResponse = new AuthResponse(token, "Signup success");
