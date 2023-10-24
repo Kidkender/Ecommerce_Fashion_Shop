@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "t_user")
+@Table(name = "t_users")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -32,8 +32,7 @@ public class User {
 
     @Embedded
     @ElementCollection
-    @CollectionTable(name = "payment_information", joinColumns =
-    @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "payment_information", joinColumns = @JoinColumn(name = "user_id"))
     private List<PaymentInformation> paymentInformations = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -46,4 +45,6 @@ public class User {
 
     private LocalDateTime createdAt;
 
+    @OneToMany
+    private List<Order> orders = new ArrayList<>();
 }

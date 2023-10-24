@@ -32,7 +32,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public String addCartItem(Long userId, AddItemRequest req) throws ProductException {
-        Cart cart = cartRepository.findUserById(userId);
+        Cart cart = cartRepository.findByUserId(userId);
         Product product = productService.findProductById(req.getProductId());
         CartItem isPresent = cartItemService.isCartItemExist(cart, product, req.getSize(), userId);
         if (isPresent == null) {
@@ -53,7 +53,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart findUserCart(Long userId) {
-        Cart cart = cartRepository.findUserById(userId);
+        Cart cart = cartRepository.findByUserId(userId);
         int totalPrice = 0;
         int totalDiscountedPrice = 0;
         int totalItem = 0;

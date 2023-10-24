@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import vn.sparkminds.be_ecommerce.entities.CartItem;
 import vn.sparkminds.be_ecommerce.entities.User;
 import vn.sparkminds.be_ecommerce.exceptions.CartItemException;
@@ -38,7 +37,7 @@ public class CartItemController {
         User user = userService.findUserProfileByJwt(jwt);
         cartItemService.removeCartItem(user.getId(), cartItemId);
         ApiResponse res = new ApiResponse();
-        res.setMessage("Item remove from cart");
+        res.setMessage("Delete item from cart");
         res.setStatus(true);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }

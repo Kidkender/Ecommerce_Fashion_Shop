@@ -12,15 +12,17 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
+@Table(name = "t_orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "order_id")
     private String orderId;
     @ManyToOne
     private User user;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 
@@ -35,5 +37,5 @@ public class Order {
     private Integer discounted;
     private String orderStatus;
     private int totalItem;
-    private LocalDateTime createAtLocalDateTime;
+    private LocalDateTime createAt;
 }

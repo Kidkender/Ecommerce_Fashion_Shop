@@ -1,4 +1,4 @@
-package vn.sparkminds.be_ecommerce.repositories;
+package vn.sparkminds.be_ecommerce.services;
 
 import vn.sparkminds.be_ecommerce.entities.Address;
 import vn.sparkminds.be_ecommerce.entities.Order;
@@ -14,7 +14,7 @@ public interface OrderService {
 
     public Order findOrderById(Long orderId) throws OrderException;
 
-    public List<Order> usersOrderHistory(Long orderId) throws OrderException;
+    public List<Order> usersOrderHistory(Long userId) throws OrderException;
 
     public Order placedOrder(Long orderId) throws OrderException;
 

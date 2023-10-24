@@ -140,4 +140,10 @@ public class ProductServiceImpl implements ProductService {
         Page<Product> filterdProduct = new PageImpl<>(pageContent, pageable, products.size());
         return filterdProduct;
     }
+
+    @Override
+    public List<Product> findAllProduct() {
+        // TODO Auto-generated method stub
+        return productRepository.findAll();
+    }
 }

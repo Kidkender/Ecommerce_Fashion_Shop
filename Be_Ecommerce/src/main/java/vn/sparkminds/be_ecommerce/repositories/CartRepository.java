@@ -8,6 +8,6 @@ import vn.sparkminds.be_ecommerce.entities.Cart;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
-    @Query("Select c form cart c where c.user.id=:userId")
-    public Cart findUserById(@Param("userId") Long userId);
+    @Query("Select c From Cart c Where c.user.id=:userId")
+    public Cart findByUserId(@Param("userId") Long userId);
 }
