@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,25 +20,25 @@ import vn.sparkminds.be_ecommerce.entities.Order;
 import vn.sparkminds.be_ecommerce.exceptions.OrderException;
 import vn.sparkminds.be_ecommerce.repositories.OrderRepository;
 import vn.sparkminds.be_ecommerce.services.OrderService;
-import vn.sparkminds.be_ecommerce.services.UserService;
 import vn.sparkminds.be_ecommerce.services.dto.response.ApiResponse;
 import vn.sparkminds.be_ecommerce.services.dto.response.PaymentLinkResponse;
 
 @RestController
 @RequestMapping("/api")
 public class PaymentController {
-    @Value("${razorpay.api.ket}")
-    String apiKey;
     @Value("${razorpay.api.secret}")
     String apiSecret;
+    @Value("${razorpay.api.key}")
+    String apiKey;
+
 
     @Autowired
     private OrderService orderService;
-    @Autowired
-    private UserService userService;
+
     @Autowired
     private OrderRepository orderRepository;
 
+    @PostMapping("/{orderId}/paymentlink")
     public ResponseEntity<PaymentLinkResponse> createPaymentLink(@PathVariable Long orderId,
             @RequestHeader("Authorization") String jwt) throws RazorpayException, OrderException {
         Order order = orderService.findOrderById(orderId);
@@ -71,6 +73,7 @@ public class PaymentController {
         }
     }
 
+    @GetMapping("/payment/redirect")
     public ResponseEntity<ApiResponse> redirect(@RequestParam(name = "payment_id") String paymentId,
             @RequestParam(name = "order_id") Long orderId)
             throws OrderException, RazorpayException {

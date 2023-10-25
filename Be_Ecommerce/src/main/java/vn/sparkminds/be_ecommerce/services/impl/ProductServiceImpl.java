@@ -30,31 +30,31 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product createProduct(CreateProductRequest req) {
-        Category topLevel = categoryRepository.findByName(req.getTopLavelCategory());
+        Category topLevel = categoryRepository.findByName(req.getTopLevelCategory());
         if (topLevel == null) {
             Category topLavelCategory = new Category();
-            topLavelCategory.setName(req.getTopLavelCategory());
+            topLavelCategory.setName(req.getTopLevelCategory());
             topLavelCategory.setLevel(1);
 
             topLevel = categoryRepository.save(topLavelCategory);
 
         }
-        Category secondLevel = categoryRepository.findByNameAndParent(req.getSecondLavelCategory(),
+        Category secondLevel = categoryRepository.findByNameAndParent(req.getSecondLevelCategory(),
                 topLevel.getName());
         if (secondLevel == null) {
             Category secondLavelCategory = new Category();
-            secondLavelCategory.setName(req.getSecondLavelCategory());
+            secondLavelCategory.setName(req.getSecondLevelCategory());
             secondLavelCategory.setParentCategory(topLevel);
             secondLavelCategory.setLevel(2);
             secondLevel = categoryRepository.save(secondLavelCategory);
         }
 
 
-        Category thirdLevel = categoryRepository.findByNameAndParent(req.getThirdLavelCategory(),
+        Category thirdLevel = categoryRepository.findByNameAndParent(req.getThirdLevelCategory(),
                 secondLevel.getName());
         if (thirdLevel == null) {
             Category thirdLavelCategory = new Category();
-            thirdLavelCategory.setName(req.getThirdLavelCategory());
+            thirdLavelCategory.setName(req.getThirdLevelCategory());
             thirdLavelCategory.setParentCategory(secondLevel);
             thirdLavelCategory.setLevel(3);
             thirdLevel = categoryRepository.save(thirdLavelCategory);
@@ -90,7 +90,14 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProduct(Long productId, Product req) throws ProductException {
         Product product = findProductById(productId);
         if (req.getQuantity() != 0) {
+            // product.setQuantity(req.getSizes().stream().mapToInt(size ->
+            // size.getQuantity()).sum());
             product.setQuantity(req.getQuantity());
+            if (req.getImageUrl() != null) {
+                product.setImageUrl(req.getImageUrl());
+            }
+
+
         }
 
         return productRepository.save(product);

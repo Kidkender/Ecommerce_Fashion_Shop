@@ -20,12 +20,12 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //    @Column(name = "title")
+    @Column(name = "title")
     private String title;
-    //    @Column(name = "description")
+    @Column(name = "description")
     private String description;
 
-    //    @Column(name = "price")
+    @Column(name = "price")
     private int price;
 
     @Column(name = "discounted_price")

@@ -15,13 +15,13 @@ import vn.sparkminds.be_ecommerce.exceptions.ProductException;
 import vn.sparkminds.be_ecommerce.services.ProductService;
 
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping("/api/v1")
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
-    @GetMapping("/category")
+    @GetMapping("/products")
     public ResponseEntity<Page<Product>> findProductByCategory(@RequestParam String category,
             @RequestParam List<String> color, @RequestParam List<String> size,
             @RequestParam Integer minPrice, @RequestParam Integer maxPrice,
@@ -33,7 +33,7 @@ public class ProductController {
         return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/id/{productId}")
+    @GetMapping("/products/id/{productId}")
     public ResponseEntity<Product> findProductById(@PathVariable Long productId)
             throws ProductException {
         Product product = productService.findProductById(productId);

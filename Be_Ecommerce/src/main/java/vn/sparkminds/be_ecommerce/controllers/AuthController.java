@@ -1,5 +1,6 @@
 package vn.sparkminds.be_ecommerce.controllers;
 
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,6 +57,8 @@ public class AuthController {
         createdUser.setPassword(passwordEncoder.encode(password));
         createdUser.setFirstName(fistName);
         createdUser.setLastName(lastName);
+        createdUser.setCreatedAt(LocalDateTime.now());
+
         User savedUser = userRepository.save(createdUser);
         Cart cart = cartService.createCart(savedUser);
         Authentication auth =

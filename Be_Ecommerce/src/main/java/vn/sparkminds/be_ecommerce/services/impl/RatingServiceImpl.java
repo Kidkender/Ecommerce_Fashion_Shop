@@ -2,12 +2,14 @@ package vn.sparkminds.be_ecommerce.services.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.sparkminds.be_ecommerce.entities.Product;
 import vn.sparkminds.be_ecommerce.entities.Rating;
 import vn.sparkminds.be_ecommerce.entities.User;
 import vn.sparkminds.be_ecommerce.exceptions.ProductException;
+import vn.sparkminds.be_ecommerce.exceptions.RatingException;
 import vn.sparkminds.be_ecommerce.repositories.RatingRepository;
 import vn.sparkminds.be_ecommerce.services.ProductService;
 import vn.sparkminds.be_ecommerce.services.RatingService;
@@ -36,9 +38,18 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
+    public void deleteRating(Long ratingId) throws RatingException {
+        Optional<Rating> opt = ratingRepository.findById(ratingId);
+        if (opt.isPresent()) {
+            ratingRepository.deleteById(ratingId);
+        } ;
+    }
+
+    @Override
     public List<Rating> getProductsRating(Long productId) {
-        // TODO Auto-generated method stub
         return ratingRepository.getAllProductsRating(productId);
     }
+
+
 
 }
