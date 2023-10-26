@@ -1,0 +1,41 @@
+version: "3.8"
+services:
+  mysql-springboot-container:
+    image: mysql:8.0.28
+    container_name: mysql-springboot-container
+    ports:
+      - 3310:3306
+    volumes:
+      - mysql-springboot-data:/var/lib/mysql
+      - mysql-springboot-config-deamond:/etc/mysql/conf.d
+    # restart:
+    networks:
+      - backend
+    environment:
+      MYSQL_DATABASE: fashion_shop
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin123
+      MYSQL_ROOT_PASSWORD: root
+
+  fashion-ecommerce-container:
+    image: kidkender/fashion_ecommerce:v1.0.0
+    container_name: fashion-ecommerce-container
+    # restart: always
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8181:8181
+    volumes:
+      - ./:/Be_ecommerce
+    networks:
+      - backend
+
+networks:
+  backend:
+    external:
+      name: springboot-app-network
+
+volumes:
+  mysql-springboot-data:
+  mysql-springboot-config-deamond:

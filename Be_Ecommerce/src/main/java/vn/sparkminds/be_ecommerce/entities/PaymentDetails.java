@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import vn.sparkminds.be_ecommerce.entities.enumeration.PaymentStatus;
 
 @Getter
 @Setter
@@ -14,7 +13,6 @@ import vn.sparkminds.be_ecommerce.entities.enumeration.PaymentStatus;
 @ToString
 public class PaymentDetails {
     private String paymentMethod;
-    // private PaymentStatus paymentStatus;
     private String paymentStatus;
     private String paymentId;
     private String razorpayPaymentLinkId;
