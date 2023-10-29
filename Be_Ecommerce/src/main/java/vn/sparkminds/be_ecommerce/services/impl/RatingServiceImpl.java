@@ -26,7 +26,6 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public Rating createRating(ratingRequest req, User user) throws ProductException {
-        // TODO Auto-generated method stub
         Product product = productService.findProductById(req.getProductId());
         Rating rating = new Rating();
         rating.setProduct(product);

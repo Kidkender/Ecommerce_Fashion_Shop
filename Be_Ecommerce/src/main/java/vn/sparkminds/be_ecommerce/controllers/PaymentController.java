@@ -68,7 +68,6 @@ public class PaymentController {
             res.setPayment_link_url(paymentLinkurl);
             return new ResponseEntity<PaymentLinkResponse>(res, HttpStatus.CREATED);
         } catch (Exception e) {
-            // TODO: handle exception
             throw new RazorpayException(e.getMessage());
         }
     }
@@ -91,7 +90,6 @@ public class PaymentController {
             return new ResponseEntity<ApiResponse>(res, HttpStatus.ACCEPTED);
 
         } catch (Exception e) {
-            // TODO: handle exception
             throw new RazorpayException(e.getMessage());
         }
     }

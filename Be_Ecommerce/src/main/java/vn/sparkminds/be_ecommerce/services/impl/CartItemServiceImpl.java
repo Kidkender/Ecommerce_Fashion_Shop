@@ -18,11 +18,11 @@ import vn.sparkminds.be_ecommerce.services.UserService;
 public class CartItemServiceImpl implements CartItemService {
 
     @Autowired
-    private CartItemRepository cartItemRepository;
+    CartItemRepository cartItemRepository;
     @Autowired
-    private UserService userService;
+    UserService userService;
     @Autowired
-    private CartRepository cartRepository;
+    CartRepository cartRepository;
 
     @Override
     public CartItem createCartItem(CartItem cartItem) {
